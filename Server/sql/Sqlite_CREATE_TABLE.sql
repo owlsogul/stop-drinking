@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `Party`(
 
     partyHolder VARCHAR(20) NOT NULL,
     partyTitle VARCHAR(100) NOT NULL,
-    partyDate DATETIME NOT NULL,
+    partyDate DATETIME,
     partyCompany VARCHAR(100),
 
     PRIMARY KEY(`partyId`),
