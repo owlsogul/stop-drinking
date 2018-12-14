@@ -30,12 +30,21 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            showToast("자동 로그인 완료!");
-            String token = (String) msg.obj;
-            AccountController.getInstance().signIn(token);
-            Intent toMain = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(toMain);
-            finish();
+            if (msg.what == 1){
+                showToast("자동 로그인 완료!");
+                String token = (String) msg.obj;
+                AccountController.getInstance().signIn(token);
+                Intent toMain = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(toMain);
+                finish();
+            }
+            else {
+                AccountController.getInstance().signOut();
+                SharedPreferences pref = getSharedPreferences("stop-drinking", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.remove("token");
+                editor.commit();
+            }
         }
     };
 
@@ -101,9 +110,20 @@ public class LoginActivity extends AppCompatActivity {
                 ServerConnector.getInstance().request("validate_token", dataObj, new RequestCallback() {
                     @Override
                     public void requestCallback(String result) {
-                        Message msg = validTokenHandler.obtainMessage();
-                        msg.obj = token;
-                        validTokenHandler.sendMessage(msg);
+                        try {
+                            JSONObject dataObj = new JSONObject(result);
+                            int resCode = dataObj.getInt("result");
+                            if (resCode == 200){
+                                Message msg = validTokenHandler.obtainMessage();
+                                msg.what = 1;
+                                msg.obj = token;
+                                validTokenHandler.sendMessage(msg);
+                                return;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        validTokenHandler.sendEmptyMessage(0);
                     }
                 }, new ErrorCallback() {
                     @Override
