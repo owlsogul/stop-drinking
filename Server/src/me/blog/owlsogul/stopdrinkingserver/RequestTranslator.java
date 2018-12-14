@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import me.blog.owlsogul.stopdrinkingserver.request.Request;
+import me.blog.owlsogul.stopdrinkingserver.request.RequestAddFeedbacks;
 import me.blog.owlsogul.stopdrinkingserver.request.RequestCheckDuplicatedMemberEmail;
 import me.blog.owlsogul.stopdrinkingserver.request.RequestCheckDuplicatedMemberId;
 import me.blog.owlsogul.stopdrinkingserver.request.RequestLogin;
@@ -27,6 +28,7 @@ public class RequestTranslator {
 		requests.put("check_dup_member_id", new RequestCheckDuplicatedMemberId());
 		requests.put("check_dup_member_email", new RequestCheckDuplicatedMemberEmail());
 		requests.put("validate_token", new RequestValidateToken());
+		requests.put("add_feedbacks", new RequestAddFeedbacks());
 	}
 	
 	public String translateRequest(Client client, String data) {
