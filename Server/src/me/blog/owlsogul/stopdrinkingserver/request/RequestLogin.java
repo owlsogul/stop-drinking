@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import me.blog.owlsogul.stopdrinkingserver.database.DAOMember;
 import me.blog.owlsogul.stopdrinkingserver.database.Member;
 import me.blog.owlsogul.stopdrinkingserver.token.AES256Util;
+import me.blog.owlsogul.stopdrinkingserver.token.TokenController;
 
 public class RequestLogin extends Request{
 
@@ -31,6 +32,7 @@ public class RequestLogin extends Request{
 				String token = AES256Util.aesEncode(memberId);
 				resObj.put("result", 200);
 				resObj.put("token", token);
+				TokenController.getInstance().setToken(memberId, token);
 				System.out.printf("계정(Id:%s)가 로그인하였습니다. 토큰이 발급되었습니다. (%s)\n", memberId, token);
 				return resObj.toJSONString();
 			} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException

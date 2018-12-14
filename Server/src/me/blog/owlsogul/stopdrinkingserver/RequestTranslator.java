@@ -9,7 +9,9 @@ import org.json.simple.parser.ParseException;
 import me.blog.owlsogul.stopdrinkingserver.request.Request;
 import me.blog.owlsogul.stopdrinkingserver.request.RequestCheckDuplicatedMemberEmail;
 import me.blog.owlsogul.stopdrinkingserver.request.RequestCheckDuplicatedMemberId;
+import me.blog.owlsogul.stopdrinkingserver.request.RequestLogin;
 import me.blog.owlsogul.stopdrinkingserver.request.RequestRegister;
+import me.blog.owlsogul.stopdrinkingserver.request.RequestValidateToken;
 
 public class RequestTranslator {
 	
@@ -20,9 +22,11 @@ public class RequestTranslator {
 	
 	private void initRequest() {
 		requests = new HashMap<>();
+		requests.put("login", new RequestLogin());
 		requests.put("register", new RequestRegister());
 		requests.put("check_dup_member_id", new RequestCheckDuplicatedMemberId());
 		requests.put("check_dup_member_email", new RequestCheckDuplicatedMemberEmail());
+		requests.put("validate_token", new RequestValidateToken());
 	}
 	
 	public String translateRequest(Client client, String data) {

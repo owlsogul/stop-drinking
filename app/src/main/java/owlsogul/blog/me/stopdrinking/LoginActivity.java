@@ -26,6 +26,19 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtId;
     private EditText txtPw;
 
+    private Handler validTokenHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            showToast("자동 로그인 완료!");
+            String token = (String) msg.obj;
+            AccountController.getInstance().signIn(token);
+            Intent toMain = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(toMain);
+            finish();
+        }
+    };
+
     private Handler loginHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -80,12 +93,27 @@ public class LoginActivity extends AppCompatActivity {
 
         // 로그인 확인
         SharedPreferences pref = getSharedPreferences("stop-drinking", MODE_PRIVATE);
-        String token = pref.getString("token", null);
+        final String token = pref.getString("token", null);
         if (token != null){ // 토큰이 존재할 시 바로 메인 이동
-            AccountController.getInstance().signIn(token);
-            Intent toMain = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(toMain);
-            finish();
+            try {
+                JSONObject dataObj = new JSONObject();
+                dataObj.put("token", token);
+                ServerConnector.getInstance().request("validate_token", dataObj, new RequestCallback() {
+                    @Override
+                    public void requestCallback(String result) {
+                        Message msg = validTokenHandler.obtainMessage();
+                        msg.obj = token;
+                        validTokenHandler.sendMessage(msg);
+                    }
+                }, new ErrorCallback() {
+                    @Override
+                    public void errorCallback(int errorCode) {
+
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
     }
