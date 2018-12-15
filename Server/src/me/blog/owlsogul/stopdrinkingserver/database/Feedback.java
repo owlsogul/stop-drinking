@@ -26,6 +26,9 @@ public class Feedback {
 	public void setFeedbackMemo(String feedbackMemo) {this.feedbackMemo = feedbackMemo;}
 	
 	
-	
+	@Override
+	public String toString() {
+		return String.format("Feedback(%d, %d, %d)", partyId, feedbackAmountDrink, feedbackDrinkness);
+	}
 
 }

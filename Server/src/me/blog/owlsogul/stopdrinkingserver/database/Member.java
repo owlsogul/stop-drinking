@@ -21,4 +21,9 @@ public class Member {
 	public String getMemberEmail() {return memberEmail;}
 	public void setMemberEmail(String memberEmail) {this.memberEmail = memberEmail;}
 	
+	@Override
+	public String toString() {
+		return String.format("Member(%s, %s, %s)", memberId, memberPw, memberEmail);
+	}
+	
 }

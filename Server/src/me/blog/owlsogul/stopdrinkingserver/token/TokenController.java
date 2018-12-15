@@ -23,6 +23,18 @@ public class TokenController {
 	
 	private HashMap<String, String> tokens = new HashMap<>();
 	
+	public String getMemberId(String token) {
+		String memberId = null;
+		try {
+			memberId = AES256Util.aesDecode(token);
+		} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return memberId;
+	}
+	
 	public String getToken(String memberId) {
 		return tokens.get(memberId);
 	}
@@ -35,6 +47,7 @@ public class TokenController {
 		try {
 			String memberId = AES256Util.aesDecode(token);
 			String originToken = tokens.get(memberId);
+			System.out.printf("[토큰 비교] 주어진 토큰 : %s, 멤버 아이디 : %s, 찾아본 토큰 : %s\n", token, memberId, originToken);
 			if (token.equals(originToken)) {
 				return true;
 			}

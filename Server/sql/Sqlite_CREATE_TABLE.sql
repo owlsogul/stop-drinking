@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `Member`(
 
 CREATE TABLE IF NOT EXISTS `Party`(
 
-	partyId INT NOT NULL,
+	partyId INTEGER NOT NULL,
 
 	partyTension INT NOT NULL,
 	partyDrinkingYesterday INT NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `Party`(
 
     partyHolder VARCHAR(20) NOT NULL,
     partyTitle VARCHAR(100) NOT NULL,
-    partyDate DATETIME NOT NULL,
+    partyDate DATE,
     partyCompany VARCHAR(100),
 
     PRIMARY KEY(`partyId`),
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `Party`(
 
 CREATE TABLE IF NOT EXISTS `Feedback`(
 
-	partyId INT NOT NULL,
+	partyId INTEGER NOT NULL,
     feedbackAmountDrink INT NOT NULL,
     feedbackDrinkness INT NOT NULL,
 
