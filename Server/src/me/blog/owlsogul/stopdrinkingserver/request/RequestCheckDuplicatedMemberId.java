@@ -11,7 +11,7 @@ public class RequestCheckDuplicatedMemberId extends Request{
 	public String request(String command, JSONObject dataObj) {
 		String memberId = (String) dataObj.get("memberId");
 		DAOMember dao = new DAOMember();
-		boolean chk = dao.checkDuplicatedMemberEmail(Member.createMember(memberId, null, null));
+		boolean chk = dao.checkDuplicatedMemberId(Member.createMember(memberId, null, null));
 		
 		JSONObject resObj = new JSONObject();
 		if (chk) {
