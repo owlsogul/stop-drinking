@@ -23,7 +23,7 @@ public class ServerConnector {
         return instance;
     }
 
-    public static final int CONNECTION_TIME = 3000;
+    public static final int CONNECTION_TIME = 100004;
     public static final String serverHost = "165.194.35.106";
     public static final int serverPort = 31234;
 

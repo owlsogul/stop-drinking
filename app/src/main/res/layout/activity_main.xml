@@ -13,5 +13,30 @@
         android:text="로그아웃"
         android:onClick="onClick"/>
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="긴장도"
+        android:id="@+id/txtTension"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="전날 마신 술의 양"
+        android:id="@+id/txtDrinkingYesterday"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="수면량"
+        android:id="@+id/txtSleepHour"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주량 추천 받기"
+        android:onClick="onTest"/>
+
+
+
+
 
 </LinearLayout>
