@@ -48,7 +48,13 @@ public class ServerConnector {
 
                     // from server
                     String result = br.readLine(); // 한줄씩 들어가는 임시 보관소
-                    requestCallback.requestCallback(result);
+                    JSONObject resObj = new JSONObject(result);
+                    int resCode = resObj.getInt("result");
+                    if (resCode == 200) {
+                        requestCallback.requestCallback(resCode, resObj);
+                    } else {
+                        errorCallback.errorCallback(resCode);
+                    }
                     Log.d("ServerConnector", "from Server, " + result);
 
                     // close socket
@@ -57,10 +63,10 @@ public class ServerConnector {
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    errorCallback.errorCallback(100);
+                    errorCallback.errorCallback(1000);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    errorCallback.errorCallback(101);
+                    errorCallback.errorCallback(1001);
                 } finally {
                     if (socket != null){
                         try {

@@ -148,23 +148,14 @@ public class FirstLoginActivity extends AppCompatActivity {
             dataObj.put("token", AccountController.getInstance().getAccountToken());
             ServerConnector.getInstance().request("add_feedbacks", dataObj, new RequestCallback() {
                 @Override
-                public void requestCallback(String result) {
-                    try {
-                        JSONObject resObj = new JSONObject(result);
-                        int resCode = resObj.getInt("result");
-                        if (resCode == 200){
-                            toMainHandler.sendEmptyMessage(0);
-                            return;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    showToastInThread("오류가 발생하였습니다.");
+                public void requestCallback(int resCode, JSONObject resObj) {
+                    toMainHandler.sendEmptyMessage(0);
+                    showToastInThread("초기 학습이 완료되었습니다.");
                 }
             }, new ErrorCallback() {
                 @Override
                 public void errorCallback(int errorCode) {
-
+                    showToastInThread("오류가 발생하였습니다:" + errorCode);
                 }
             });
         } catch (JSONException e) {

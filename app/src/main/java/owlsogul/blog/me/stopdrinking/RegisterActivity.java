@@ -104,24 +104,15 @@ public class RegisterActivity extends AppCompatActivity {
             ServerConnector conn = ServerConnector.getInstance();
             conn.request("register", dataObj, new RequestCallback() {
                 @Override
-                public void requestCallback(String result) {
-                    try {
-                        JSONObject resObj = new JSONObject(result);
-                        int resCode = resObj.getInt("result");
-                        if (resCode == 200){
-                            showToastInThread("회원 가입 성공");
-                            successRegisterHandler.sendEmptyMessage(0);
-                            return;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    showToastInThread("회원 가입 실패");
+                public void requestCallback(int resCode, JSONObject resObj) {
+                    showToastInThread("회원 가입 성공");
+                    successRegisterHandler.sendEmptyMessage(0);
+                    return;
                 }
             }, new ErrorCallback() {
                 @Override
                 public void errorCallback(int errorCode) {
-
+                    showToastInThread("회원 가입 실패:"+errorCode);
                 }
             });
         } catch (JSONException e) {
@@ -192,27 +183,20 @@ public class RegisterActivity extends AppCompatActivity {
             dataObj.put("memberId", memberId);
             conn.request("check_dup_member_id", dataObj, new RequestCallback() {
                 @Override
-                public void requestCallback(String result) {
-                    Log.d("RegisterActivity", result);
-                    try {
-                        JSONObject resObj = new JSONObject(result);
-                        int resCode = (int) resObj.get("result");
-                        if (resCode == 200){
-                            //Message msg = sucChkId.obtainMessage();
-                            //sucChkId.sendMessage(msg);
-                            showToastInThread("사용 가능한 아이디입니다.");
-                            return;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    showToastInThread("이미 사용 중인 아이디입니다.");
+                public void requestCallback(int resCode, JSONObject resObj) {
+                    Log.d("RegisterActivity", resObj.toString());
+                    showToastInThread("사용 가능한 아이디입니다.");
                 }
             }, new ErrorCallback() {
                 @Override
                 public void errorCallback(int errorCode) {
                     Log.d("RegisterActivity", ""+errorCode);
-                    showToastInThread("서버 에러가 발생했습니다.");
+                    if (errorCode == 400){
+                        showToastInThread("이미 사용 중인 아이디입니다.");
+                    }
+                    else {
+                        showToastInThread("서버 에러가 발생했습니다:" + errorCode);
+                    }
                 }
             });
         } catch (JSONException e) {
@@ -227,25 +211,21 @@ public class RegisterActivity extends AppCompatActivity {
             dataObj.put("memberEmail", memberEmail);
             conn.request("check_dup_member_email", dataObj, new RequestCallback() {
                 @Override
-                public void requestCallback(String result) {
-                    Log.d("RegisterActivity", result);
-                    try {
-                        JSONObject resObj = new JSONObject(result);
-                        int resCode = (int) resObj.get("result");
-                        if (resCode == 200){
-                            showToastInThread("사용 가능한 이메일입니다.");
-                            return;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    showToastInThread("이미 사용중인 이메일입니다.");
+                public void requestCallback(int resCode, JSONObject resObj) {
+                    Log.d("RegisterActivity", resObj.toString());
+                    showToastInThread("사용 가능한 이메일입니다.");
+                    return;
                 }
             }, new ErrorCallback() {
                 @Override
                 public void errorCallback(int errorCode) {
                     Log.d("RegisterActivity", ""+errorCode);
-                    showToastInThread("서버 에러가 발생했습니다.");
+                    if (errorCode == 400){
+                        showToastInThread("이미 사용중인 이메일입니다.");
+                    }
+                    else{
+                        showToastInThread("서버 에러가 발생했습니다:"+errorCode);
+                    }
                 }
             });
         } catch (JSONException e) {

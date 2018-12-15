@@ -109,26 +109,23 @@ public class LoginActivity extends AppCompatActivity {
                 dataObj.put("token", token);
                 ServerConnector.getInstance().request("validate_token", dataObj, new RequestCallback() {
                     @Override
-                    public void requestCallback(String result) {
-                        try {
-                            JSONObject dataObj = new JSONObject(result);
-                            int resCode = dataObj.getInt("result");
-                            if (resCode == 200){
-                                Message msg = validTokenHandler.obtainMessage();
-                                msg.what = 1;
-                                msg.obj = token;
-                                validTokenHandler.sendMessage(msg);
-                                return;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        validTokenHandler.sendEmptyMessage(0);
+                    public void requestCallback(int resCode, JSONObject resObj) {
+                        Message msg = validTokenHandler.obtainMessage();
+                        msg.what = 1;
+                        msg.obj = token;
+                        validTokenHandler.sendMessage(msg);
+                        return;
                     }
                 }, new ErrorCallback() {
                     @Override
                     public void errorCallback(int errorCode) {
-
+                        validTokenHandler.sendEmptyMessage(0);
+                        if (errorCode == 400){
+                            showToastInThread("토큰 유효시간이 끝났습니다. 다시 로그인해주세요");
+                        }
+                        else{
+                            showToastInThread("에러가 발생하였습니다:" + errorCode);
+                        }
                     }
                 });
             } catch (JSONException e) {
@@ -165,28 +162,25 @@ public class LoginActivity extends AppCompatActivity {
             dataObj.put("memberPw", memberPw);
             conn.request("login", dataObj, new RequestCallback() {
                 @Override
-                public void requestCallback(String result) {
+                public void requestCallback(int resCode, JSONObject resObj) {
                     try {
-                        JSONObject resObj = new JSONObject(result);
-                        int resCode = resObj.getInt("result");
                         String token = resObj.getString("token");
-                        if (resCode == 200){
-                            Message msg = loginHandler.obtainMessage();
-                            msg.what = 1;
-                            msg.obj = token;
-                            loginHandler.sendMessage(msg);
-                            return;
-                        }
+                        Message msg = loginHandler.obtainMessage();
+                        msg.what = 1;
+                        msg.obj = token;
+                        loginHandler.sendMessage(msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        loginHandler.sendEmptyMessage(0);
+                        showToastInThread("에러가 발생하였습니다:" + resCode);
                     }
-                    loginHandler.sendEmptyMessage(0);
                     return;
                 }
             }, new ErrorCallback() {
                 @Override
                 public void errorCallback(int errorCode) {
-
+                    loginHandler.sendEmptyMessage(0);
+                    showToastInThread("에러가 발생하였습니다:" + errorCode);
                 }
             });
         } catch (JSONException e) {
