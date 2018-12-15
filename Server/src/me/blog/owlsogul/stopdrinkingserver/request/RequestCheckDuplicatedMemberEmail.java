@@ -18,7 +18,7 @@ public class RequestCheckDuplicatedMemberEmail extends Request{
 			resObj.put("result", 200);
 		}
 		else {
-			resObj.put("result", 500);
+			resObj.put("result", 400);
 		}
 		return resObj.toJSONString();
 	}
