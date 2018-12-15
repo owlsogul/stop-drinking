@@ -38,25 +38,21 @@ test_x = [[ tension, dinkingYesterday, sleepHour, drinkness ]]
 # In[3]:
 
 
-n_amount_layer = 4
 n_amount_input = 4
-n_amount_hidden = [4, 4]
+n_amount_hidden = [4]
 
 amount_weights = {
     'h1' : tf.Variable(tf.random_normal([n_amount_input, n_amount_hidden[0]], dtype=tf.float64), dtype=tf.float64),
-    'h2' : tf.Variable(tf.random_normal([n_amount_hidden[0], n_amount_hidden[1]], dtype=tf.float64), dtype=tf.float64),
-    'out' : tf.Variable(tf.random_normal([n_amount_hidden[1], 1], dtype=tf.float64), dtype=tf.float64)
+    'out' : tf.Variable(tf.random_normal([n_amount_hidden[0], 1], dtype=tf.float64), dtype=tf.float64)
 }
 amount_biases = {
     'b1' : tf.Variable(tf.random_normal([n_amount_hidden[0]], dtype=tf.float64), dtype=tf.float64),
-    'b2' : tf.Variable(tf.random_normal([n_amount_hidden[1]], dtype=tf.float64), dtype=tf.float64),
     'out' : tf.Variable(tf.random_normal([1], dtype=tf.float64), dtype=tf.float64)
 }
 
 def amount_mlp(x):
     L1 = tf.add(tf.matmul(x, amount_weights['h1']), amount_biases['b1'])
-    L2 = tf.add(tf.matmul(L1, amount_weights['h2']), amount_biases['b2'])
-    Lout = tf.matmul(L2, amount_weights['out']) +  amount_biases['out']
+    Lout = tf.matmul(L1, amount_weights['out']) +  amount_biases['out']
     return Lout
 
 amount_x = tf.placeholder(dtype=tf.float64, shape=[None, n_amount_input])
@@ -75,8 +71,7 @@ with tf.Session() as sess:
     saver.restore(sess, save_path)
 
     # test
-    print("result:")
-    print(sess.run([amount_hypothesis], feed_dict={amount_x: test_x}))
+    print("result:"+str(sess.run([amount_hypothesis], feed_dict={amount_x: test_x})))
 print("jobs-done")
 
 
