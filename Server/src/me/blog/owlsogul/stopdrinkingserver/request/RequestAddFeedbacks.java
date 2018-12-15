@@ -12,6 +12,7 @@ import me.blog.owlsogul.stopdrinkingserver.database.DAOParty;
 import me.blog.owlsogul.stopdrinkingserver.database.Feedback;
 import me.blog.owlsogul.stopdrinkingserver.database.Party;
 import me.blog.owlsogul.stopdrinkingserver.token.TokenController;
+import me.blog.owlsogul.stopdrinkingserver.trainer.TrainController;
 
 public class RequestAddFeedbacks extends Request{
 
@@ -50,6 +51,8 @@ public class RequestAddFeedbacks extends Request{
 				System.out.printf("%s 추가에 실패하였습니다.\n", party.toString());
 			}
 		}
+		TrainController trainer = TrainController.getInstance();
+		trainer.trainModel(memberId);
 		JSONObject resObj = new JSONObject();
 		resObj.put("result", 200);
 		return resObj.toJSONString();
