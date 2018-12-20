@@ -1,26 +1,33 @@
 package me.blog.owlsogul.stopdrinkingserver.request;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
+import me.blog.owlsogul.jttp.server.client.Client;
+import me.blog.owlsogul.jttp.server.request.Request;
+import me.blog.owlsogul.jttp.server.request.Response;
+import me.blog.owlsogul.jttp.server.request.page.RequestPage;
 import me.blog.owlsogul.stopdrinkingserver.database.DAOMember;
 import me.blog.owlsogul.stopdrinkingserver.database.Member;
 
-public class RequestCheckDuplicatedMemberEmail extends Request{
+public class RequestCheckDuplicatedMemberEmail extends RequestPage{
 
 	@Override
-	public String request(String command, JSONObject dataObj) {
-		String memberEmail = (String) dataObj.get("memberEmail");
+	public void onLoad(String arg0) {
+		
+	}
+
+	@Override
+	public Response request(Client client, Request req) {
+		JsonObject dataObj = req.getData();
+		String memberEmail = (String) dataObj.get("memberEmail").getAsString();
 		DAOMember dao = new DAOMember();
 		boolean chk = dao.checkDuplicatedMemberEmail(Member.createMember(null, null, memberEmail));
 		
-		JSONObject resObj = new JSONObject();
+		int resCode = 400;
 		if (chk) {
-			resObj.put("result", 200);
+			resCode = 200;
 		}
-		else {
-			resObj.put("result", 400);
-		}
-		return resObj.toJSONString();
+		return new Response(resCode, null);
 	}
 
 }

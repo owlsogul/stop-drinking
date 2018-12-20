@@ -1,23 +1,32 @@
 package me.blog.owlsogul.stopdrinkingserver.request;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
+import me.blog.owlsogul.jttp.server.client.Client;
+import me.blog.owlsogul.jttp.server.request.Request;
+import me.blog.owlsogul.jttp.server.request.Response;
+import me.blog.owlsogul.jttp.server.request.page.RequestPage;
 import me.blog.owlsogul.stopdrinkingserver.token.TokenController;
 
-public class RequestValidateToken extends Request{
+public class RequestValidateToken extends RequestPage{
 
 	@Override
-	public String request(String command, JSONObject dataObj) {
-		String token = (String) dataObj.get("token");
+	public void onLoad(String arg0) {
+		
+	}
+
+	@Override
+	public Response request(Client c, Request req) {
+		JsonObject dataObj = req.getData();
+		String token = dataObj.get("token").getAsString();
 		boolean isValidToken = TokenController.getInstance().isValidToken(token);
+		
+		int resCode = 400;
 		if (isValidToken) {
-			JSONObject resObj = new JSONObject();
-			resObj.put("result", 200);
-			return resObj.toJSONString();
+			resCode = 200;
 		}
-		JSONObject resObj = new JSONObject();
-		resObj.put("result", 400);
-		return resObj.toJSONString();
+		Response res = new Response(resCode, null);
+		return res;
 	}
 
 }

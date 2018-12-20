@@ -1,26 +1,34 @@
 package me.blog.owlsogul.stopdrinkingserver.request;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
+import me.blog.owlsogul.jttp.server.client.Client;
+import me.blog.owlsogul.jttp.server.request.Request;
+import me.blog.owlsogul.jttp.server.request.Response;
+import me.blog.owlsogul.jttp.server.request.page.RequestPage;
 import me.blog.owlsogul.stopdrinkingserver.database.DAOMember;
 import me.blog.owlsogul.stopdrinkingserver.database.Member;
 
-public class RequestCheckDuplicatedMemberId extends Request{
+public class RequestCheckDuplicatedMemberId extends RequestPage{
 
 	@Override
-	public String request(String command, JSONObject dataObj) {
-		String memberId = (String) dataObj.get("memberId");
-		DAOMember dao = new DAOMember();
-		boolean chk = dao.checkDuplicatedMemberId(Member.createMember(memberId, null, null));
+	public void onLoad(String arg0) {
+		// TODO Auto-generated method stub
 		
-		JSONObject resObj = new JSONObject();
+	}
+
+	@Override
+	public Response request(Client client, Request req) {
+		JsonObject dataObj = req.getData();
+		String memberId = (String) dataObj.get("memberId").getAsString();
+		DAOMember dao = new DAOMember();
+		boolean chk = dao.checkDuplicatedMemberId(Member.createMember(null, memberId, null));
+		
+		int resCode = 400;
 		if (chk) {
-			resObj.put("result", 200);
+			resCode = 200;
 		}
-		else {
-			resObj.put("result", 400);
-		}
-		return resObj.toJSONString();
+		return new Response(resCode, null);
 	}
 
 }
