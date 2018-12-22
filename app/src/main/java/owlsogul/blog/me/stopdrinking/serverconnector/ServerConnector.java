@@ -49,9 +49,9 @@ public class ServerConnector {
                     // from server
                     String result = br.readLine(); // 한줄씩 들어가는 임시 보관소
                     JSONObject resObj = new JSONObject(result);
-                    int resCode = resObj.getInt("result");
+                    int resCode = resObj.getInt("responseCode");
                     if (resCode == 200) {
-                        requestCallback.requestCallback(resCode, resObj);
+                        requestCallback.requestCallback(resCode, resObj.getJSONObject("responseData"));
                     } else {
                         errorCallback.errorCallback(resCode);
                     }
